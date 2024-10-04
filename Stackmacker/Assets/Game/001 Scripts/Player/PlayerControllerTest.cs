@@ -51,12 +51,10 @@ public class PlayerControllerTest : MonoBehaviour
                         if (direction.x > 0)
                         {
                             _swipeDirection = SwipeDirection.Right;
-                            Debug.Log("Right");
                         }
                         else
                         {
-                            _swipeDirection = SwipeDirection.Left;
-                            Debug.Log("Left");
+                            _swipeDirection = SwipeDirection.Left;  
                         }
                     }
                     else
@@ -64,12 +62,10 @@ public class PlayerControllerTest : MonoBehaviour
                         if (direction.y > 0)
                         {
                             _swipeDirection = SwipeDirection.Up;
-                            Debug.Log("UP");
                         }    
                         else
                         {
                             _swipeDirection = SwipeDirection.Down;
-                            Debug.Log("DOWN");
                         }
                     }
 
@@ -109,7 +105,7 @@ public class PlayerControllerTest : MonoBehaviour
 
         }
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 100; i++)
         {
             if (Physics.Raycast(startPosition + Vector3.up * 1f, Vector3.down, out hit, 5f, _layerMaskToGroundBrick))
             {
