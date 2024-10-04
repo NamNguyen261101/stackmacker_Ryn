@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerControllerMobile : MonoBehaviour
 {
+    #region Variables
     [SerializeField] private Rigidbody _rigi;
     [SerializeField] private LayerMask _checkPlayerBridge;
     // speed  
@@ -16,14 +17,14 @@ public class PlayerControllerMobile : MonoBehaviour
     private bool _isMoving = false;
     private bool _isStuck = false; // check va cham
 
-    private float dragToMove = 50f; 
+    private float dragToMove = 50f;
+
+    #endregion
 
     void Start()
     {
         
     }
-
-    
     void Update()
     {
         HandleInputUser();
@@ -76,6 +77,12 @@ public class PlayerControllerMobile : MonoBehaviour
                 newInput.y = 0;
 
                 // check stuck
+                if (CheckGround())
+                {
+                    return;
+                }
+
+                // rotation 
 
 
                 // Moving
@@ -90,7 +97,7 @@ public class PlayerControllerMobile : MonoBehaviour
     /// <summary>
     /// Change Route - Direction
     /// </summary>
-    private void ChangeDirectionState(DirectionState _direction) // string
+    private void ChangeDirectionState(DirectionState _direction) // can change to string
     {
         switch (_direction)
         {
@@ -127,7 +134,7 @@ public class PlayerControllerMobile : MonoBehaviour
     private bool CheckGround()
     {
         Debug.DrawLine(this.transform.position, this.transform.position + Vector3.down * 1.5f, Color.red);
-        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, Vector2.down, 1.5f, _checkPlayerBridge);
+        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, Vector3.down, 1.5f, _checkPlayerBridge);
 
         if (hit.collider != null)
         {

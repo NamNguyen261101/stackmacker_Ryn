@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CameraHolder : MonoBehaviour
 {
+    #region Variables
     public Transform TargetObject;
     public float MoveSmoothTime = 0.3F;
     public float RotationSpeed = 6f;
@@ -14,11 +15,17 @@ public class CameraHolder : MonoBehaviour
     private Transform myTransform;
     private Vector3 velocity = Vector3.zero;
 
+    #endregion 
+
+
     void Awake()
     {
         myTransform = this.transform;
     }
 
+    /// <summary>
+    /// Camera follow to target even rotation
+    /// </summary>
     void Update()
     {
         if (TargetObject != null && Enabled)
