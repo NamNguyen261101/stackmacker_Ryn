@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class PlayerControllerTest : MonoBehaviour
@@ -8,10 +9,22 @@ public class PlayerControllerTest : MonoBehaviour
     #region Variables
         [SerializeField] private Rigidbody _rigi;
         [SerializeField] private LayerMask _layerMaskToGroundBrick;
+        
         [SerializeField] private SwipeDirection _swipeDirection;        
     // speed
         [SerializeField] private float _speed;
+
+        private bool swiping = false;
+        private bool eventSent = false;
+        private Vector2 lastPosition;
+        private Vector2 _startPosition;
+
+        Vector3 target;
+        Vector3 startPosition;
+
+    // brick
         
+        [SerializeField] private int defaultBricks = 0;
     #endregion
     // Start is called before the first frame update
     void Start()
@@ -19,11 +32,7 @@ public class PlayerControllerTest : MonoBehaviour
 
     }
 
-    private bool swiping = false;
-    private bool eventSent = false;
-    private Vector2 lastPosition;
-    private Vector2 _startPosition;
-
+   
     void Update()
     {
         if (Input.touchCount == 0)
@@ -45,6 +54,10 @@ public class PlayerControllerTest : MonoBehaviour
                     
                     Vector2 direction = Input.GetTouch(0).position - lastPosition;
                     GetTargetPosition(_swipeDirection);
+
+                    //
+                    this.transform.position = Vector3.MoveTowards(target, direction, _speed);
+
                     if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
                     {
 
@@ -83,9 +96,8 @@ public class PlayerControllerTest : MonoBehaviour
 
     private Vector3 GetTargetPosition(SwipeDirection swipeDirection)
     {
-        Vector3 target = Vector3.zero;
-        Vector3 startPosition = this.transform.position;
-        
+        target = Vector3.zero;
+        startPosition = this.transform.position;
         RaycastHit hit;
         switch (swipeDirection)
         {
@@ -122,6 +134,8 @@ public class PlayerControllerTest : MonoBehaviour
                 Debug.Log("Did not Hit");
                 break;
             }
+
+            
         }
         return target;
     }
@@ -131,35 +145,31 @@ public class PlayerControllerTest : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        _rigi.velocity = _speed * lastPosition;
-    }
-
-    private void ApplyNewRoute(Vector3 newRoute)
-    {
-        _rigi.velocity = newRoute;
-
-    }
-    private void RayCastCheck(SwipeDirection swipeDirection)
-    {
-        
-       //  RaycastHit hit = Physics.Raycast(this.transform.position, transform.TransformDirection(Vector3.down) ,_layerMaskToGroundBrick);
-    }
-    private void HandleInput()
-    {
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
+            Vector3 touchPos = Camera.main.ScreenToWorldPoint(
+                new Vector3(touch.position.x, touch.position.y, 0.3f));
+            if (touch.phase == TouchPhase.Stationary)
             {
-                //  startTouchPosition = touch.position;
+                if (touchPos.x < 0)
+                    _speed = 8f;
+                else if (touchPos.x > 0)
+                    _speed = -8f;
             }
-            else if (touch.phase == TouchPhase.Ended)
-            {
 
+            if (touch.phase == TouchPhase.Ended)
+            {
+                _speed = 0f;
             }
+
+            Debug.LogError("touch");
         }
     }
+
+
+
+
     public enum SwipeDirection
     {
         Up,
