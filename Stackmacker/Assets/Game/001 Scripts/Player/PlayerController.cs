@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    #region Params
     [SerializeField] private LayerMask _layerMaskToGroundBrick;
     private Touch _touch;
     private Vector2 _touchStartPosition, _touchEndPosition;
@@ -19,16 +21,35 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _speed = 10f;
     private bool _isMoving;
     private bool _isFinish;
-    
+
+    // Brick
+    [SerializeField] private GameObject _containerBrick;
+    [SerializeField] private GameObject _brickPrefab;
+    [SerializeField] private float _brickHeight = 0.3f;
+    [SerializeField] private int _countBricks = 0;
+
+    private List<GameObject> _listBricks = new List<GameObject>();
+
+    #endregion
+
     void Start()
     {
         _nextPosition = transform.position;
         _isMoving = false;
         _isFinish = false;
 
+
     }
 
-   
+    public void OnInit()
+    {
+        _countBricks = 0;
+
+        ClearBrick();
+        
+
+    }
+
     void Update()
     {
         CheckDirection();
@@ -45,7 +66,9 @@ public class PlayerController : MonoBehaviour
             directionState = Direction.NONE;
         }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     private void CheckDirection()
     {
         if (Input.touchCount > 0)
@@ -70,22 +93,31 @@ public class PlayerController : MonoBehaviour
                 else if (Mathf.Abs(x) > Mathf.Abs(y))
                 {
                     directionState = x > 0 ? Direction.RIGHT : Direction.LEFT;
-                    Debug.LogError("Left - right");
+                   // Debug.LogError("Left - right");
                 }
                 else
                 {
                     directionState = y > 0 ? Direction.FORWARD : Direction.BACK;
-                    Debug.LogError("Back - forward");
+                    // Debug.LogError("Back - forward");
                 }
             }
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="nextPos"></param>
     private void Move(Direction direction, Vector3 nextPos)
     {
         transform.position = Vector3.MoveTowards(transform.position, nextPos, _speed * Time.deltaTime);
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="dir"></param>
+    /// <returns></returns>
     private Vector3 TargetPosition(Direction dir)
     {
         _targetPosition = Vector3.zero;
@@ -115,7 +147,7 @@ public class PlayerController : MonoBehaviour
         {
             if (_hit.transform.CompareTag("Brick") || _hit.transform.CompareTag("Unbrick"))
             {
-                Debug.Log(_hit.transform.tag);
+                // Debug.Log(_hit.transform.tag);
                 nextPosition = nextPosition + _direction * _unit;
             }
             else break;
@@ -142,6 +174,82 @@ public class PlayerController : MonoBehaviour
 
 
         return nextPosition;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="newBrick"></param>
+    private void AddBrick(GameObject newBrick)
+    {
+        // add to object
+        newBrick = Instantiate(_brickPrefab, transform.position, Quaternion.Euler(-90, 0, -180));
+        // Instantiate(_brickPrefab, transform.position, Quaternion.Euler(-90, 0, -180), _containerBrick.transform);
+        // Instantiate (m_Prefab, position, rotation) as GameObject).transform.parent = parentGameObject.transform
+        newBrick.transform.parent = transform;
+        newBrick.tag = "Untagged";
+        newBrick.GetComponent<BoxCollider>().enabled = false;
+        newBrick.transform.position = new Vector3(newBrick.transform.position.x, newBrick.transform.position.y + _brickHeight * _countBricks - 0.3f, newBrick.transform.position.z);
+        _listBricks.Add(newBrick);
+
+        _countBricks++;
+        // Debug.Log("da add thanh cong");
+        GameObject child = transform.Find("jiao").gameObject; // jiao
+        //GameObject child2 = _containerBrick.transform.GetChild(3).gameObject;
+        if (_countBricks > 1)
+        {
+
+            child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y + _brickHeight, child.transform.position.z);
+            //child2.transform.position = new Vector3(child2.transform.position.x, child2.transform.position.y + _brickHeight, child2.transform.position.z);
+            Debug.Log(child.transform.position);
+        }
+    }
+
+    /* private void AddBrick()
+     {
+         _listBricks.Add(Instantiate(_brickPrefab,
+                                  new Vector3(0, _listBricks.Count * _brickHeight, 0) + transform.position,
+                                  *//*Quaternion.Euler(new Vector3(-90, playerDirection * 90, 180))*//*
+                                  _brickPrefab.transform.rotation,
+                                  transform));
+         _containerBrick.transform.position = (new Vector3(0, (_listBricks.Count - 1) * _brickHeight, 0)) + transform.position;
+     }*/
+    private void RemoveBrick()
+    {
+        _countBricks--;
+
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    private void ClearBrick()
+    {
+        while (_listBricks.Count >0)
+        {
+            RemoveBrick();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Brick"))
+        {
+            if (other.gameObject.GetComponent<Renderer>().enabled)
+            {
+                other.gameObject.GetComponent<Renderer>().enabled = false;
+                AddBrick(other.gameObject);
+                // AddBrick();
+            }
+        }
+    }
+    void OnTriggerExit(Collider collisionInfo)
+    {
+        if (collisionInfo.gameObject.CompareTag("UnBrick"))
+        {
+            RemoveBrick();
+            Instantiate(_brickPrefab, collisionInfo.transform.position, Quaternion.Euler(-90, 0, -180));
+        }
+        Debug.Log(_countBricks);
     }
     public enum Direction
     {
