@@ -189,7 +189,7 @@ public class PlayerController : MonoBehaviour
         // Instantiate (m_Prefab, position, rotation) as GameObject).transform.parent = parentGameObject.transform
         newBrick.transform.parent = _containerBrick.transform; // 
         newBrick.tag = "Untagged";
-        newBrick.GetComponent<BoxCollider>().enabled = false;
+        // newBrick.GetComponent<BoxCollider>().enabled = false;
         newBrick.transform.position = new Vector3(
                                                 newBrick.transform.position.x,
                                                 newBrick.transform.position.y + _brickHeight * _countBricks - 0.3f,
@@ -237,6 +237,9 @@ public class PlayerController : MonoBehaviour
         Destroy(_listBricks[_listBricks.Count - 1]);
         _listBricks.RemoveAt(_listBricks.Count - 1);
         this.transform.position = (new Vector3(0, (_listBricks.Count - 1) * _brickHeight, 0)) + transform.position;
+/*
+        GameObject child = transform.Find("jiao").gameObject;
+        if (countBrick > 1) child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y - brickHeight, child.transform.position.z);*/
     }
     /// <summary>
     /// Clear all brick before start
@@ -265,12 +268,13 @@ public class PlayerController : MonoBehaviour
     }
     void OnTriggerExit(Collider collisionInfo)
     {
-        if (collisionInfo.gameObject.CompareTag("UnBrick"))
+        if (collisionInfo.gameObject.CompareTag("Unbrick"))
         {
+            Debug.Log("remove");
             RemoveBrick();
             Instantiate(_brickPrefab, collisionInfo.transform.position, Quaternion.Euler(-90, 0, -180));
         }
-        Debug.Log(_countBricks);
+        // Debug.Log(_countBricks);
     }
     public enum Direction
     {
