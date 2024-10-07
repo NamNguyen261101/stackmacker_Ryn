@@ -5,12 +5,12 @@ using UnityEngine;
 public class CameraHolder : MonoBehaviour
 {
     #region Variables
-    public Transform TargetObject;
-    public float MoveSmoothTime = 0.3F;
-    public float RotationSpeed = 6f;
-    public Vector3 Offset = new Vector3(0f, 15f, 0f);
+    [SerializeField] private Transform TargetObject;
+    [SerializeField] private float MoveSmoothTime = 0.3F;
+    [SerializeField] private float RotationSpeed = 6f;
+    [SerializeField] private Vector3 Offset = new Vector3(0f, 15f, 0f);
 
-    public bool Enabled = true;
+    [SerializeField] private bool Enabled = true;
 
     private Transform myTransform;
     private Vector3 velocity = Vector3.zero;
