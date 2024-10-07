@@ -7,9 +7,10 @@ public class PlayerController : MonoBehaviour
 {
     #region Params
     [SerializeField] private LayerMask _layerMaskToGroundBrick;
+    // input
     private Touch _touch;
     private Vector2 _touchStartPosition, _touchEndPosition;
-    private RaycastHit _hit;
+    private RaycastHit _hit; // check
 
     private float _unit = 1f;
     private Vector3 _targetPosition;
@@ -20,7 +21,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Direction directionState;
     [SerializeField] private float _speed = 10f;
     private bool _isMoving;
-    private bool _isFinish;
+    private bool _isFinish; // finish game
 
     // Brick
     [SerializeField] private GameObject _containerBrick;
@@ -36,9 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         _nextPosition = transform.position;
         _isMoving = false;
-        _isFinish = false;
-
-        
+        _isFinish = false; 
     }
 
     public void OnInit()
@@ -183,28 +182,35 @@ public class PlayerController : MonoBehaviour
     /// <param name="newBrick"></param>
     private void AddBrick(GameObject newBrick)
     {
+        Debug.Log("First add");
         // add to object
-        newBrick = Instantiate(_brickPrefab, transform.position, Quaternion.Euler(-90, 0, -180));
+        newBrick = Instantiate(_brickPrefab, transform.position, Quaternion.Euler(-90, 0, -180)); // as _containerBrick
         // Instantiate(_brickPrefab, transform.position, Quaternion.Euler(-90, 0, -180), _containerBrick.transform);
         // Instantiate (m_Prefab, position, rotation) as GameObject).transform.parent = parentGameObject.transform
-        newBrick.transform.parent = transform;
+        newBrick.transform.parent = _containerBrick.transform; // 
         newBrick.tag = "Untagged";
         newBrick.GetComponent<BoxCollider>().enabled = false;
         newBrick.transform.position = new Vector3(
                                                 newBrick.transform.position.x,
                                                 newBrick.transform.position.y + _brickHeight * _countBricks - 0.3f,
                                                 newBrick.transform.position.z);
+
+        
         _listBricks.Add(newBrick);
 
+       
         _countBricks++;
         // Debug.Log("da add thanh cong");
         GameObject child = transform.Find("jiao").gameObject; // jiao
         //GameObject child2 = _containerBrick.transform.GetChild(3).gameObject;
         if (_countBricks > 0)
         {
-
+            //newBrick.transform.position = new Vector3(newBrick.transform.position.x, newBrick.transform.position.y + _brickHeight, newBrick.transform.position.z);
             child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y + _brickHeight, child.transform.position.z);
             //child2.transform.position = new Vector3(child2.transform.position.x, child2.transform.position.y + _brickHeight, child2.transform.position.z);
+
+            // add canvas
+            // Count++
         }
     }
 
@@ -237,7 +243,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void ClearBrick()
     {
-        while (_listBricks.Count >0)
+        while (_listBricks.Count > 0)
         {
             RemoveBrick();
         }
@@ -247,15 +253,17 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Brick"))
         {
+            Debug.Log("brick_container");
             if (other.gameObject.GetComponent<Renderer>().enabled)
             {
+                Debug.Log("brick container_collider");
                 other.gameObject.GetComponent<Renderer>().enabled = false;
                 AddBrick(other.gameObject);
                 // AddBrick();
             }
         }
     }
-    /*void OnTriggerExit(Collider collisionInfo)
+    void OnTriggerExit(Collider collisionInfo)
     {
         if (collisionInfo.gameObject.CompareTag("UnBrick"))
         {
@@ -263,7 +271,7 @@ public class PlayerController : MonoBehaviour
             Instantiate(_brickPrefab, collisionInfo.transform.position, Quaternion.Euler(-90, 0, -180));
         }
         Debug.Log(_countBricks);
-    }*/
+    }
     public enum Direction
     {
         NONE,
