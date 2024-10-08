@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Brick
   - Unbrick
+  - Finished
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - GroundBrick
   - Wall
   - Bridge
-  - 
+  - BrickContainer
   - 
   - 
   - 

@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    // Start is called before the first frame update
-    void Start()
+    public static UnityAction ActionGameStart, ActionLevelPassed;
+    private int nextLevel;
+    public void RestartLevel()
     {
-        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void LoadNextLevel()
     {
-        
+        nextLevel = PlayerPrefs.GetInt("LEVEL", 1);
+        nextLevel++;
+        PlayerPrefs.SetInt("LEVEL", nextLevel);
+        SceneManager.LoadScene(nextLevel);
     }
 }

@@ -25,11 +25,15 @@ public class PlayerController : MonoBehaviour
 
     // Brick
     [SerializeField] private GameObject _containerBrick;
+    [SerializeField] private GameObject _containerBrickInBridge;
     [SerializeField] private GameObject _brickPrefab;
-    [SerializeField] private float _brickHeight = 0.3f;
+    [SerializeField] private float _brickHeight = 0.2f;
     [SerializeField] private int _countBricks = 0;
 
     private List<GameObject> _listBricks = new List<GameObject>();
+    private List<GameObject> _listBricksInBridge = new List<GameObject>();
+
+    // Canvas Count
 
     #endregion
 
@@ -37,14 +41,16 @@ public class PlayerController : MonoBehaviour
     {
         _nextPosition = transform.position;
         _isMoving = false;
-        _isFinish = false; 
+        _isFinish = false;
+
+        CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
     }
 
     public void OnInit()
     {
         _countBricks = 0;
 
-        // ClearBrick();
+        ClearBrick();
     }
 
     void Update()
@@ -184,58 +190,39 @@ public class PlayerController : MonoBehaviour
     {
         // add to object
         newBrick = Instantiate(_brickPrefab, transform.position, Quaternion.Euler(-90, 0, -180)); // as _containerBrick
-        // Instantiate(_brickPrefab, transform.position, Quaternion.Euler(-90, 0, -180), _containerBrick.transform);
-        // Instantiate (m_Prefab, position, rotation) as GameObject).transform.parent = parentGameObject.transform
         newBrick.transform.parent = _containerBrick.transform; // 
         newBrick.tag = "Untagged";
         // newBrick.GetComponent<BoxCollider>().enabled = false;
         newBrick.transform.position = new Vector3(
                                                 newBrick.transform.position.x,
-                                                newBrick.transform.position.y + _brickHeight * _countBricks - 0.3f,
-                                                newBrick.transform.position.z);
+                                                newBrick.transform.position.y + _brickHeight * _countBricks - 0.5f, 
+                                                newBrick.transform.position.z); // 0,3f
 
         
         _listBricks.Add(newBrick);
 
        
         _countBricks++;
-        // Debug.Log("da add thanh cong");
         GameObject child = transform.Find("jiao").gameObject; // jiao
-        //GameObject child2 = _containerBrick.transform.GetChild(3).gameObject;
         if (_countBricks > 0)
         {
-            //newBrick.transform.position = new Vector3(newBrick.transform.position.x, newBrick.transform.position.y + _brickHeight, newBrick.transform.position.z);
             child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y + _brickHeight, child.transform.position.z);
-            //child2.transform.position = new Vector3(child2.transform.position.x, child2.transform.position.y + _brickHeight, child2.transform.position.z);
-
-            // add canvas
-            // Count++
         }
+        // Update UI
+        CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
     }
-
-    /*private void AddBrick(GameObject newBrick)
-    {
-        newBrick = Instantiate(_brickPrefab,
-                               new Vector3(0, _listBricks.Count * _brickHeight, 0) + transform.position,
-                               Quaternion.Euler(-90, 0, -180),_containerBrick.transform);
-
-        newBrick.transform.parent = transform;
-        newBrick.tag = "Untagged";
-        newBrick.GetComponent<BoxCollider>().enabled = false;
-        _listBricks.Add(newBrick);
-        
-        newBrick.transform.position = (new Vector3(0, (_listBricks.Count - 1) * _brickHeight, 0)) + transform.position;
-    }*/
-
     /// <summary>
     /// Remove brick when go through Bridge -> UnBrick
     /// </summary>
     private void RemoveBrick()
     {
-        _countBricks--;
-        Destroy(_listBricks[_listBricks.Count - 1]);
-        _listBricks.RemoveAt(_listBricks.Count - 1);
-        this.transform.position = (new Vector3(0, (_listBricks.Count - 1) * _brickHeight, 0)) + transform.position;
+        _countBricks--; 
+        if (_listBricks.Count > 0)
+        {
+            Destroy(_listBricks[_listBricks.Count - 1]);
+            _listBricks.RemoveAt(_listBricks.Count - 1);
+        }
+
 
         GameObject child = transform.Find("jiao").gameObject;
         if (_countBricks > 1)
@@ -243,29 +230,37 @@ public class PlayerController : MonoBehaviour
             child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y - _brickHeight, child.transform.position.z);
         }
 
-       /* for (int i = 0; i < _listBricks.Count; i++)
-        {
-            Destroy(_listBricks[i - 1]);
-            _listBricks.RemoveAt(i - 1);
-
-        }*/
+        // Update UI
+        CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
     }
 
     /// <summary>
     /// Clear all brick before start
     /// </summary>
-   /* private void ClearBrick()
+    private void ClearBrick()
     {
-        while (_listBricks.Count > 0)
+        GameObject child = transform.Find("jiao").gameObject;
+       /* while (_countBricks > 0)
         {
-            RemoveBrick();
+            Destroy[_listBricks[i]]
+            if (i > 0) child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y - brickHeight, child.transform.position.z);
+        }*/
+       
+        for (int i = 0; i < _listBricks.Count; i++)
+        {
+            Debug.Log("Destroy brick");
+            Destroy(_listBricks[i].gameObject);
+            if (i > 0)
+            {
+                child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y - _brickHeight, child.transform.position.z);
+            }
+           
         }
-    }*/
 
-    private void AddBrickUnderBridge()
-    {
-
+        _listBricks.Clear();
+        // UPDATE UI
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -277,8 +272,14 @@ public class PlayerController : MonoBehaviour
                 
                 other.gameObject.GetComponent<Renderer>().enabled = false;
                 AddBrick(other.gameObject);
-                // AddBrick();
+                
             }
+        }
+
+        if (other.gameObject.CompareTag("Finished"))
+        {
+            _isFinish = true;
+            ClearBrick();
         }
     }
 
@@ -286,14 +287,20 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Unbrick"))
         {
-            /*if (other.gameObject.GetComponent<Renderer>().enabled)
-            {
-
-            }*/
-
-            // other.gameObject.GetComponent<Renderer>().enabled = true;
             RemoveBrick();
-            Instantiate(_brickPrefab, other.transform.position, Quaternion.Euler(-90, 0, -180));
+            GameObject brickInBridge = Instantiate(_brickPrefab, other.transform.position, Quaternion.Euler(-90, 0, -180));
+            int _countBrickInBridge = 0;
+
+            _countBrickInBridge += 1;
+            brickInBridge.transform.parent = transform;
+            brickInBridge.tag = "Untagged";
+            brickInBridge.transform.parent = _containerBrickInBridge.transform;
+
+            brickInBridge.transform.position = new Vector3(
+                                               brickInBridge.transform.position.x,
+                                               brickInBridge.transform.position.y + _brickHeight * _countBrickInBridge - 0.8f,
+                                               brickInBridge.transform.position.z);
+            _listBricksInBridge.Add(brickInBridge);
         }
     }
 
