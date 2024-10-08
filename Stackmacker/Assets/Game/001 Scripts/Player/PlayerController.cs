@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
     {
         _countBricks = 0;
 
-        ClearBrick();
+        // ClearBrick();
     }
 
     void Update()
@@ -182,7 +182,6 @@ public class PlayerController : MonoBehaviour
     /// <param name="newBrick"></param>
     private void AddBrick(GameObject newBrick)
     {
-        Debug.Log("First add");
         // add to object
         newBrick = Instantiate(_brickPrefab, transform.position, Quaternion.Euler(-90, 0, -180)); // as _containerBrick
         // Instantiate(_brickPrefab, transform.position, Quaternion.Euler(-90, 0, -180), _containerBrick.transform);
@@ -237,45 +236,67 @@ public class PlayerController : MonoBehaviour
         Destroy(_listBricks[_listBricks.Count - 1]);
         _listBricks.RemoveAt(_listBricks.Count - 1);
         this.transform.position = (new Vector3(0, (_listBricks.Count - 1) * _brickHeight, 0)) + transform.position;
-/*
+
         GameObject child = transform.Find("jiao").gameObject;
-        if (countBrick > 1) child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y - brickHeight, child.transform.position.z);*/
+        if (_countBricks > 1)
+        {
+            child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y - _brickHeight, child.transform.position.z);
+        }
+
+       /* for (int i = 0; i < _listBricks.Count; i++)
+        {
+            Destroy(_listBricks[i - 1]);
+            _listBricks.RemoveAt(i - 1);
+
+        }*/
     }
+
     /// <summary>
     /// Clear all brick before start
     /// </summary>
-    private void ClearBrick()
+   /* private void ClearBrick()
     {
         while (_listBricks.Count > 0)
         {
             RemoveBrick();
         }
+    }*/
+
+    private void AddBrickUnderBridge()
+    {
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Brick"))
         {
-            Debug.Log("brick_container");
+           
             if (other.gameObject.GetComponent<Renderer>().enabled)
             {
-                Debug.Log("brick container_collider");
+                
                 other.gameObject.GetComponent<Renderer>().enabled = false;
                 AddBrick(other.gameObject);
                 // AddBrick();
             }
         }
     }
-    void OnTriggerExit(Collider collisionInfo)
+
+    private void OnTriggerExit(Collider other)
     {
-        if (collisionInfo.gameObject.CompareTag("Unbrick"))
+        if (other.gameObject.CompareTag("Unbrick"))
         {
-            Debug.Log("remove");
+            /*if (other.gameObject.GetComponent<Renderer>().enabled)
+            {
+
+            }*/
+
+            // other.gameObject.GetComponent<Renderer>().enabled = true;
             RemoveBrick();
-            Instantiate(_brickPrefab, collisionInfo.transform.position, Quaternion.Euler(-90, 0, -180));
+            Instantiate(_brickPrefab, other.transform.position, Quaternion.Euler(-90, 0, -180));
         }
-        // Debug.Log(_countBricks);
     }
+
     public enum Direction
     {
         NONE,

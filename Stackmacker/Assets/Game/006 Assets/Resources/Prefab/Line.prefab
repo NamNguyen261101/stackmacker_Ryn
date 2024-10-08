@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33448905800756249}
   - component: {fileID: 23425944778256323}
   - component: {fileID: 2162520566033741783}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Line
   m_TagString: Unbrick
   m_Icon: {fileID: 0}
@@ -103,5 +103,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.99442315, y: 1.001046, z: 0.6994131}
-  m_Center: {x: 0.0023851395, y: -1.9598225e-17, z: 0.12775823}
+  m_Size: {x: 0.99442315, y: 1.001046, z: 0.81844896}
+  m_Center: {x: 0.0023851395, y: -4.4249806e-16, z: 0.1872761}
