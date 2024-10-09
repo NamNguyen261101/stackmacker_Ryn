@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
         _nextPosition = transform.position;
         _isMoving = false;
         _isFinish = false;
-
+        OnInit();
         CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
     }
 
@@ -96,12 +96,12 @@ public class PlayerController : MonoBehaviour
                 else if (Mathf.Abs(x) > Mathf.Abs(y))
                 {
                     directionState = x > 0 ? Direction.RIGHT : Direction.LEFT;
-                   // Debug.LogError("Left - right");
+                   
                 }
                 else
                 {
                     directionState = y > 0 ? Direction.FORWARD : Direction.BACK;
-                    // Debug.LogError("Back - forward");
+                    
                 }
             }
         }
@@ -259,6 +259,14 @@ public class PlayerController : MonoBehaviour
 
         _listBricks.Clear();
         // UPDATE UI
+        CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
+    }
+
+    private void HandleWithFinishRace()
+    {
+        _isFinish = true;
+        GameManager.ActionLevelPassed?.Invoke();
+        ClearBrick();
     }
 
 
@@ -274,12 +282,11 @@ public class PlayerController : MonoBehaviour
                 AddBrick(other.gameObject);
                 
             }
-        }
+        } 
 
         if (other.gameObject.CompareTag("Finished"))
         {
-            _isFinish = true;
-            ClearBrick();
+            HandleWithFinishRace();
         }
     }
 
@@ -301,6 +308,7 @@ public class PlayerController : MonoBehaviour
                                                brickInBridge.transform.position.y + _brickHeight * _countBrickInBridge - 0.8f,
                                                brickInBridge.transform.position.z);
             _listBricksInBridge.Add(brickInBridge);
+
         }
     }
 

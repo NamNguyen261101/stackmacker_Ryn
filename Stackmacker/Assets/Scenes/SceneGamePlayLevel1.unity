@@ -535,6 +535,7 @@ GameObject:
   - component: {fileID: 75845199}
   - component: {fileID: 75845201}
   - component: {fileID: 75845200}
+  - component: {fileID: 75845202}
   m_Layer: 5
   m_Name: ButtonToPress
   m_TagString: Untagged
@@ -551,14 +552,14 @@ RectTransform:
   m_GameObject: {fileID: 75845198}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 9.890455, y: 79.816795, z: 9.890455}
+  m_LocalScale: {x: 9.232922, y: 67.96932, z: 8.212152}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 330588245}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 994}
+  m_AnchoredPosition: {x: 0, y: 979}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &75845200
@@ -601,7 +602,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 75845202}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -625,6 +626,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 75845198}
   m_CullTransparentMesh: 1
+--- !u!114 &75845202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75845198}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!4 &79868199 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3753414226860548768, guid: 680fafd85c16f024192891099b1460ee, type: 3}
@@ -6075,6 +6106,7 @@ Transform:
   - {fileID: 369950860}
   - {fileID: 39771443}
   - {fileID: 2065964105}
+  - {fileID: 2100462901}
   - {fileID: 815227428}
   - {fileID: 1907710598}
   - {fileID: 697761940}
@@ -7901,7 +7933,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1565616688}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2119335602
 PrefabInstance:
@@ -8044,4 +8076,3 @@ SceneRoots:
   - {fileID: 2075214187}
   - {fileID: 1171276227}
   - {fileID: 1565616688}
-  - {fileID: 2100462901}

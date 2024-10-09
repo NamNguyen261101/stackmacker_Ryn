@@ -23,8 +23,6 @@ public class PlayerControllerTest : MonoBehaviour
         Vector3 startPosition;
 
     // brick
-        
-        [SerializeField] private int defaultBricks = 0;
     #endregion
     // Start is called before the first frame update
     void Start()

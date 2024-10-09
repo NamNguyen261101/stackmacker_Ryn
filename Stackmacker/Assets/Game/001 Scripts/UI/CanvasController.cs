@@ -6,24 +6,37 @@ using UnityEngine;
 
 public class CanvasController : Singleton<CanvasController>
 {
-    [SerializeField] private GameObject panelMenu, panelInGame, panelEndGame;
-    [SerializeField] private TextMeshProUGUI textStackIndicator;
+    [SerializeField] private GameObject _panelMenu, _panelInGame, _panelEndGame;
+    [SerializeField] private TextMeshProUGUI _textStackIndicator;
+    [SerializeField] private TextMeshProUGUI _textUISwipe;
 
+    /// <summary>
+    /// Enable get a game start
+    /// </summary>
     private void OnEnable()
     {
         GameManager.ActionGameStart += SetInGameUI;
         GameManager.ActionLevelPassed += SetEndGameUI;
     }
 
+    /// <summary>
+    /// Set In Game After Player Swipe
+    /// </summary>
     private void SetInGameUI()
     {
-        panelMenu.SetActive(false);
-        panelInGame.SetActive(true);
+        _textUISwipe.enabled = false;
+        
+        _panelMenu.SetActive(false);
+        _panelInGame.SetActive(true);
+        
     }
 
+    /// <summary>
+    /// Set End Game UI
+    /// </summary>
     private void SetEndGameUI()
     {
-        panelEndGame.SetActive(true);
+        _panelEndGame.SetActive(true);
     }
 
     #region UI Buttons' methods
@@ -34,7 +47,7 @@ public class CanvasController : Singleton<CanvasController>
 
     public void ButtonStartPressed()
     {
-        GameManager.ActionGameStart?.Invoke();
+        GameManager.ActionGameStart.Invoke();
     }
 
     public void ButtonNextLevelPressed()
@@ -43,11 +56,17 @@ public class CanvasController : Singleton<CanvasController>
     }
     #endregion
 
+    /// <summary>
+    /// Update Text when player get a brick
+    /// </summary>
+    /// <param name="stackBrickSize"></param>
     public void UpdateStackIndicatorText(int stackBrickSize)
     {
-        textStackIndicator.text = stackBrickSize.ToString();
+        _textStackIndicator.text = stackBrickSize.ToString();
     }
-
+    /// <summary>
+    /// Disable when call it
+    /// </summary>
     private void OnDisable()
     {
         GameManager.ActionGameStart -= SetInGameUI;
