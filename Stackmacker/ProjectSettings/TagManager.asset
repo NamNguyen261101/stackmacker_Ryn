@@ -7,6 +7,7 @@ TagManager:
   - Brick
   - Unbrick
   - Finished
+  - Bridge
   layers:
   - Default
   - TransparentFX

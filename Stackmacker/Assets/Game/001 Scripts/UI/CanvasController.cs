@@ -10,8 +10,12 @@ public class CanvasController : Singleton<CanvasController>
     [SerializeField] private TextMeshProUGUI _textStackIndicator;
     [SerializeField] private TextMeshProUGUI _textUISwipe;
 
+    void Start()
+    {
+        
+    }
     /// <summary>
-    /// Enable get a game start
+    /// Enable get a game start (Oninit)
     /// </summary>
     private void OnEnable()
     {

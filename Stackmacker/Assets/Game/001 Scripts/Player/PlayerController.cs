@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviour
 
         while (Physics.Raycast(nextPosition + _direction * _unit, Vector3.down, out _hit, 5f, _layerMaskToGroundBrick))
         {
-            if (_hit.transform.CompareTag("Brick") || _hit.transform.CompareTag("Unbrick"))
+            if (_hit.transform.CompareTag("Brick") || _hit.transform.CompareTag("Unbrick") || _hit.transform.CompareTag("Finished") || _hit.transform.CompareTag("Bridge"))
             {
                 // Debug.Log(_hit.transform.tag);
                 nextPosition = nextPosition + _direction * _unit;
@@ -214,7 +214,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Remove brick when go through Bridge -> UnBrick
     /// </summary>
-    private void RemoveBrick()
+    private void RemoveBrick(Collider bridge)
     {
         _countBricks--; 
         if (_listBricks.Count > 0)
@@ -230,6 +230,7 @@ public class PlayerController : MonoBehaviour
             child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y - _brickHeight, child.transform.position.z);
         }
 
+        bridge.gameObject.tag = "Bridge";
         // Update UI
         CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
     }
@@ -240,11 +241,7 @@ public class PlayerController : MonoBehaviour
     private void ClearBrick()
     {
         GameObject child = transform.Find("jiao").gameObject;
-       /* while (_countBricks > 0)
-        {
-            Destroy[_listBricks[i]]
-            if (i > 0) child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y - brickHeight, child.transform.position.z);
-        }*/
+       
        
         for (int i = 0; i < _listBricks.Count; i++)
         {
@@ -265,7 +262,7 @@ public class PlayerController : MonoBehaviour
     private void HandleWithFinishRace()
     {
         _isFinish = true;
-        GameManager.ActionLevelPassed?.Invoke();
+        GameManager.ActionLevelPassed.Invoke();
         ClearBrick();
     }
 
@@ -282,7 +279,26 @@ public class PlayerController : MonoBehaviour
                 AddBrick(other.gameObject);
                 
             }
-        } 
+        }
+        else if (other.gameObject.CompareTag("Unbrick"))
+        {
+            RemoveBrick(other);
+            GameObject brickInBridge = Instantiate(_brickPrefab, other.transform.position, Quaternion.Euler(-90, 0, -180));
+            int _countBrickInBridge = 0;
+
+            _countBrickInBridge += 1;
+
+            brickInBridge.tag = "Bridge";
+            brickInBridge.transform.parent = _containerBrickInBridge.transform;
+
+            brickInBridge.transform.position = new Vector3(
+                                               brickInBridge.transform.position.x,
+                                               brickInBridge.transform.position.y + _brickHeight * _countBrickInBridge - 0.3f,
+                                               brickInBridge.transform.position.z);
+            _listBricksInBridge.Add(brickInBridge);
+
+        }
+
 
         if (other.gameObject.CompareTag("Finished"))
         {
@@ -290,27 +306,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Unbrick"))
-        {
-            RemoveBrick();
-            GameObject brickInBridge = Instantiate(_brickPrefab, other.transform.position, Quaternion.Euler(-90, 0, -180));
-            int _countBrickInBridge = 0;
-
-            _countBrickInBridge += 1;
-            brickInBridge.transform.parent = transform;
-            brickInBridge.tag = "Untagged";
-            brickInBridge.transform.parent = _containerBrickInBridge.transform;
-
-            brickInBridge.transform.position = new Vector3(
-                                               brickInBridge.transform.position.x,
-                                               brickInBridge.transform.position.y + _brickHeight * _countBrickInBridge - 0.8f,
-                                               brickInBridge.transform.position.z);
-            _listBricksInBridge.Add(brickInBridge);
-
-        }
-    }
+   
 
     public enum Direction
     {
