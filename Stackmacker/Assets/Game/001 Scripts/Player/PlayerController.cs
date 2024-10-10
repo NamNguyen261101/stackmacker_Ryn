@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UI.CanvasScaler;
 
 public class PlayerController : MonoBehaviour
 {
@@ -40,10 +41,12 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _nextPosition = transform.position;
+        _countBricks = 0;
+        _brickHeight = _brickPrefab.GetComponent<MeshRenderer>().bounds.size.y; // resett lai 
         _isMoving = false;
         _isFinish = false;
         OnInit();
-        CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
+        // CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
     }
 
     public void OnInit()
@@ -148,7 +151,7 @@ public class PlayerController : MonoBehaviour
 
         while (Physics.Raycast(nextPosition + _direction * _unit, Vector3.down, out _hit, 5f, _layerMaskToGroundBrick))
         {
-            if (_hit.transform.CompareTag("Brick") || _hit.transform.CompareTag("Unbrick") || _hit.transform.CompareTag("Finished") || _hit.transform.CompareTag("Bridge"))
+            if (_hit.transform.CompareTag("Brick") || _hit.transform.CompareTag("Unbrick") || _hit.transform.CompareTag("Bridge"))
             {
                 // Debug.Log(_hit.transform.tag);
                 nextPosition = nextPosition + _direction * _unit;
@@ -158,28 +161,40 @@ public class PlayerController : MonoBehaviour
                 break;
             }
         }
-
-       /* for (int i = 0; i < 100; i++)
+        if (Physics.Raycast(nextPosition + _direction * _unit, Vector3.down, out _hit, 5f, _layerMaskToGroundBrick) || _hit.transform.CompareTag("Finished"))
         {
-            if (Physics.Raycast(nextPosition + Vector3.up * 1f, Vector3.down, out _hit, 5f, _layerMaskToGroundBrick))
+            _isFinish = true;
+        }
+            /* for (int i = 0; i < 100; i++)
+             {
+                 if (Physics.Raycast(nextPosition + Vector3.up * 1f, Vector3.down, out _hit, 5f, _layerMaskToGroundBrick))
+                 {
+                     Debug.DrawRay(nextPosition + Vector3.up * 1f, Vector3.down * 5f, Color.red, 5);
+                     // luu lai moi lan ban trung
+                     Debug.Log("Did Hit");
+                     _targetPosition = _hit.transform.parent.position;
+
+                     nextPosition.z += 1;
+                 }
+                 else
+                 {
+                     Debug.DrawRay(nextPosition + Vector3.up * 1f, Vector3.down * 5f, Color.green);
+                     Debug.Log("Did not Hit");
+                     break;
+                 }
+             }*/
+
+            /*if (Physics.Raycast(nextPosition + _direction * _unit, Vector3.down, out _hit, 5f) && _hit.transform.CompareTag("Destination"))
             {
-                Debug.DrawRay(nextPosition + Vector3.up * 1f, Vector3.down * 5f, Color.red, 5);
-                // luu lai moi lan ban trung
-                Debug.Log("Did Hit");
-                _targetPosition = _hit.transform.parent.position;
+                _isFinish = true;
+                GameObject finishObject = _hit.transform.gameObject;
+                GameObject chestObject = finishObject.transform.Find("baoxiang_close").gameObject;
 
-                nextPosition.z += 1;
-            }
-            else
-            {
-                Debug.DrawRay(nextPosition + Vector3.up * 1f, Vector3.down * 5f, Color.green);
-                Debug.Log("Did not Hit");
-                break;
-            }
-        }*/
-
-
-        return nextPosition;
+                chestWidth = chestObject.GetComponent<Collider>().bounds.size.z;
+                Vector3 finishPos = chestObject.transform.position - new Vector3(0, 0, chestWidth / 2);
+                nextPosition = finishPos;
+            }*/
+            return nextPosition;
     }
 
     /// <summary>
@@ -209,7 +224,7 @@ public class PlayerController : MonoBehaviour
             child.transform.position = new Vector3(child.transform.position.x, child.transform.position.y + _brickHeight, child.transform.position.z);
         }
         // Update UI
-        CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
+        // CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
     }
     /// <summary>
     /// Remove brick when go through Bridge -> UnBrick
@@ -232,7 +247,7 @@ public class PlayerController : MonoBehaviour
 
         bridge.gameObject.tag = "Bridge";
         // Update UI
-        CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
+        // CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
     }
 
     /// <summary>
@@ -245,7 +260,7 @@ public class PlayerController : MonoBehaviour
        
         for (int i = 0; i < _listBricks.Count; i++)
         {
-            Debug.Log("Destroy brick");
+            // Debug.Log("Destroy brick");
             Destroy(_listBricks[i].gameObject);
             if (i > 0)
             {
@@ -255,8 +270,7 @@ public class PlayerController : MonoBehaviour
         }
 
         _listBricks.Clear();
-        // UPDATE UI
-        CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
+        
     }
 
     private void HandleWithFinishRace()
@@ -300,9 +314,9 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        if (other.gameObject.CompareTag("Finished"))
+        if (other.gameObject.name == "zhongdian")
         {
-            HandleWithFinishRace();
+            ClearBrick();
         }
     }
 
