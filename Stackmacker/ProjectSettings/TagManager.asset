@@ -9,6 +9,7 @@ TagManager:
   - Finished
   - Bridge
   - Destination
+  - FinishedLine
   layers:
   - Default
   - TransparentFX

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CanvasController : Singleton<CanvasController>
 {
-    [SerializeField] private GameObject _panelMenu, _panelInGame, _panelEndGame;
+   /* [SerializeField] private GameObject _panelMenu, _panelInGame, _panelEndGame;
     [SerializeField] private TextMeshProUGUI _textStackIndicator;
     [SerializeField] private TextMeshProUGUI _textUISwipe;
 
@@ -75,5 +75,5 @@ public class CanvasController : Singleton<CanvasController>
     {
         GameManager.ActionGameStart -= SetInGameUI;
         GameManager.ActionLevelPassed -= SetEndGameUI;
-    }
+    }*/
 }

@@ -21,5 +21,7 @@ public class LevelManager : MonoBehaviour
         }
 
         prefabLevel[currentLevel - 1].SetActive(true);
+        // prefabLevel[currentLevel].SetActive(true);
     }
+    // puublic Transform startPoint; // keo thang player vao
 }

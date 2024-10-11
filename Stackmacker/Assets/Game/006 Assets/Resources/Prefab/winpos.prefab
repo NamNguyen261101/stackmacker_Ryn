@@ -29554,7 +29554,7 @@ GameObject:
   - component: {fileID: 8382247300331861666}
   m_Layer: 6
   m_Name: zhongdian
-  m_TagString: Finished
+  m_TagString: FinishedLine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29644,8 +29644,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.99999905, y: 1.0000014, z: 1.0000031}
-  m_Center: {x: 0.0000010728836, y: 0.00000059604656, z: 0}
+  m_Size: {x: 0.99999905, y: 1.0000014, z: 1.0710241}
+  m_Center: {x: 0.0000010728836, y: 0.00000059604645, z: 0.03551061}
 --- !u!1 &1573991409181100
 GameObject:
   m_ObjectHideFlags: 0

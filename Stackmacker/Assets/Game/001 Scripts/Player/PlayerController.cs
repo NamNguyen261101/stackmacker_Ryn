@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
         _brickHeight = _brickPrefab.GetComponent<MeshRenderer>().bounds.size.y; // resett lai 
         _isMoving = false;
         _isFinish = false;
-        OnInit();
+        // OnInit();
         // CanvasController.Instance.UpdateStackIndicatorText(_listBricks.Count);
     }
 
@@ -151,7 +151,7 @@ public class PlayerController : MonoBehaviour
 
         while (Physics.Raycast(nextPosition + _direction * _unit, Vector3.down, out _hit, 5f, _layerMaskToGroundBrick))
         {
-            if (_hit.transform.CompareTag("Brick") || _hit.transform.CompareTag("Unbrick") || _hit.transform.CompareTag("Bridge"))
+            if (_hit.transform.CompareTag("Brick") || _hit.transform.CompareTag("Unbrick") || _hit.transform.CompareTag("Bridge") || _hit.transform.CompareTag("Finished") || _hit.transform.CompareTag("FinishedLine"))
             {
                 // Debug.Log(_hit.transform.tag);
                 nextPosition = nextPosition + _direction * _unit;
@@ -161,10 +161,10 @@ public class PlayerController : MonoBehaviour
                 break;
             }
         }
-        if (Physics.Raycast(nextPosition + _direction * _unit, Vector3.down, out _hit, 5f, _layerMaskToGroundBrick) || _hit.transform.CompareTag("Finished"))
-        {
-            _isFinish = true;
-        }
+      /*      if (Physics.Raycast(nextPosition + _direction * _unit, Vector3.down, out _hit, 5f, _layerMaskToGroundBrick) || _hit.transform.CompareTag("Finished"))
+            {
+                _isFinish = true;
+            }*/
             /* for (int i = 0; i < 100; i++)
              {
                  if (Physics.Raycast(nextPosition + Vector3.up * 1f, Vector3.down, out _hit, 5f, _layerMaskToGroundBrick))
@@ -276,7 +276,7 @@ public class PlayerController : MonoBehaviour
     private void HandleWithFinishRace()
     {
         _isFinish = true;
-        GameManager.ActionLevelPassed.Invoke();
+        // GameManager.ActionLevelPassed.Invoke();
         ClearBrick();
     }
 
@@ -313,11 +313,18 @@ public class PlayerController : MonoBehaviour
 
         }
 
-
-        if (other.gameObject.name == "zhongdian")
+        if (other.gameObject.CompareTag("FinishedLine"))
         {
+            _isFinish = true;
             ClearBrick();
+            //var level = Resources.Load<LevelManager>("002 Prefabs/");
+            //LevelManager.currentLevel++;
+
+            // LevelManager.LoadLevel();
+            UIManager.Instance.CloseAll();
+            UIManager.Instance.OpenUI<CanvasVictory>();
         }
+    
     }
 
    

@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class GameManager : Singleton<GameManager>
 {
-    public static UnityAction ActionGameStart, ActionLevelPassed;
+    /*public static UnityAction ActionGameStart, ActionLevelPassed;
     private int nextLevel;
     public void RestartLevel()
     {
@@ -19,5 +19,5 @@ public class GameManager : Singleton<GameManager>
         nextLevel++;
         PlayerPrefs.SetInt("LEVEL", nextLevel);
         SceneManager.LoadScene(nextLevel);
-    }
+    }*/
 }
